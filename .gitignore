@@ -1,0 +1,3 @@
+# mention file paths which should be ignored by SCM
+
+node_modules/

@@ -1,0 +1,27 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "This is a practice project to use redux with react.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manjitkumar/practice-react-with-redux.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "js"
+  ],
+  "author": "manjitkumar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/manjitkumar/practice-react-with-redux/issues"
+  },
+  "homepage": "https://github.com/manjitkumar/practice-react-with-redux#readme",
+  "dependencies": {
+    "react": "^15.4.2"
+  }
+}
