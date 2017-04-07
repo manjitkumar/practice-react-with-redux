@@ -1,22 +1,29 @@
 import React from 'react';
 
-import { addTodoItem } from '../actions';
+import { addTodoItem, toggleTodoItem } from '../actions';
 import { todoAppStore } from '../../';
 
 
 const Todo = (props) => {
+    console.log(props);
     return (
         <div>
-            <li> { props.text } </li>
+            <li onClick={()=>{
+                    todoAppStore.dispatch(toggleTodoItem(props.id))
+                }}
+                style={{
+                    textDecoration: props.completed? 'line-through': 'none'
+                }}>
+            { props.text }
+            </li>
         </div>
     );
 }
 
 const TodoList = (props) => {
-    const listItems = props.listItems.map((item) => {
-        return <Todo key={item.id} text={item.text} />
+    const listItems = props.listItems.map((item, idx) => {
+        return <Todo key={idx} id={idx} text={item.text} completed={item.completed} />
     });
-
     return (
         <ul>
             {listItems}

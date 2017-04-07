@@ -10,7 +10,6 @@ export const VisibilityFiltersList = {
 }
 
 export const addTodoItem = (text) => {
-    console.log('called addTodoItem');
     return {
         type: ADD_TODO_ITEM,
         text: text
@@ -20,7 +19,7 @@ export const addTodoItem = (text) => {
 export const toggleTodoItem = (itemId) => {
     return {
         type: TOGGLE_TODO_ITEM,
-        item_id: item_id
+        id: itemId
     };
 }
 

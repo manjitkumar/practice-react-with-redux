@@ -9,18 +9,23 @@ const initialState = {
     todos : []
 }
 
+let todoCounter = 0;
+
 const todo = (state, action) => {
     switch(action.type) {
         case 'ADD_TODO_ITEM':
             return {
-                id: action.id,
+                id: todoCounter++,
                 text: action.text,
                 completed: false
             };
         case 'TOGGLE_TODO_ITEM':
+            if (state.id !== action.id){
+                return state;
+            }
             return {
                 ...state,
-                completed: !action.completed
+                completed: !state.completed
             };
         default :
             return state;
@@ -28,7 +33,6 @@ const todo = (state, action) => {
 }
 
 const todos = (state = [], action) => {
-    console.log('called todo reducer');
     switch(action.type) {
         case 'ADD_TODO_ITEM':
             return [
@@ -36,11 +40,9 @@ const todos = (state = [], action) => {
                 todo(undefined, action)
             ];
         case 'TOGGLE_TODO_ITEM':
-            return [
-                state.map((t) => {
+            return state.map((t) => {
                     return todo(t, action);
-                })
-            ];
+                });
         default :
             return state;
     }
