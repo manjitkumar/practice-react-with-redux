@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { addTodoItem, toggleTodoItem } from '../actions';
+import {
+    addTodoItem,
+    toggleTodoItem,
+    setTodoVisibililtyFilter,
+    VisibilityFiltersList } from '../actions';
+
 import { todoAppStore } from '../../';
 
 
@@ -30,8 +35,48 @@ const TodoList = (props) => {
     );
 }
 
+
+const FilterLink = (props) => {
+    if (props.filter === props.currentFilter) {
+        return <span>{props.children}</span>
+    }
+
+    return (
+        <a href='#' onClick={(e) => {
+            e.preventDefault();
+            todoAppStore.dispatch(setTodoVisibililtyFilter(props.filter))
+        }}>
+        {props.children}
+        </a>
+    );
+}
+
+const getVisibleTodos = (todos, filter) => {
+    switch(filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter(todo => {
+                return todo.completed
+            });
+        case 'SHOW_ACTIVE':
+            return todos.filter(todo => {
+                return !todo.completed
+            });
+        default:
+            return todos;
+    }
+}
+
+
 export class TodoApp extends React.Component {
     render() {
+
+        let visibleTodos = getVisibleTodos(
+            this.props.todos,
+            this.props.visibilityFilter
+        );
+
         return(
             <div>
                 <div>
@@ -48,7 +93,21 @@ export class TodoApp extends React.Component {
                         }}
                     > Add Todo </button>
                 </div>
-                <TodoList listItems={todoAppStore.getState().todos} />
+                <TodoList listItems={visibleTodos} />
+                <p>
+                {' '}
+                <FilterLink filter={VisibilityFiltersList.SHOW_ALL} currentFilter={this.props.visibilityFilter} >
+                    All
+                </FilterLink>
+                {' '}
+                <FilterLink filter={VisibilityFiltersList.SHOW_COMPLETED} currentFilter={this.props.visibilityFilter}>
+                    Completed
+                </FilterLink>
+                {' '}
+                <FilterLink filter={VisibilityFiltersList.SHOW_ACTIVE} currentFilter={this.props.visibilityFilter}>
+                    Active
+                </FilterLink>
+                </p>
             </div>
         );
     }

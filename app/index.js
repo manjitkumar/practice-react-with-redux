@@ -12,7 +12,7 @@ export const todoAppStore = createStore(todoAppReducer);
 
 const render = () => {
     ReactDom.render(
-        <TodoApp />,
+        <TodoApp {...todoAppStore.getState()} />,
         document.getElementById('app')
     );
 }
