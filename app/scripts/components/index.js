@@ -5,7 +5,6 @@ import { todoAppStore } from '../../';
 
 
 const Todo = (props) => {
-    console.log(props);
     return (
         <div>
             <li onClick={()=>{
@@ -41,6 +40,9 @@ export class TodoApp extends React.Component {
                     }}/>
                     <button
                         onClick={()=>{
+                            if (this.input.value === ''){
+                                return
+                            }
                             todoAppStore.dispatch(addTodoItem(this.input.value));
                             this.input.value = '';
                         }}
