@@ -9,6 +9,7 @@ import {
 import { todoAppStore } from '../../';
 
 
+let nextTodoId = 0;
 
 const AddTodo = (props) => {
     let input;
@@ -18,7 +19,9 @@ const AddTodo = (props) => {
                 input = node;
             }}/>
             <button
-                onClick={() => { props.onAddClick(input.value);
+                onClick={()=> {
+                    todoAppStore.dispatch(addTodoItem(nextTodoId++, input.value)
+                );
                 input.value = '';
             }}>
             Add Todo
@@ -132,23 +135,41 @@ const getVisibleTodos = (todos, filter) => {
     }
 }
 
-let nextTodoId = 0;
 
-export const TodoApp = (props) => {
-    return(
-        <div>
-            <AddTodo
-                onAddClick={(text)=> {
-                    todoAppStore.dispatch(addTodoItem(nextTodoId++, text)
-                    );
-                }}
-            />
+class VisibleTodoList extends React.Component {
+    // This is a container component.
+
+    componentDidMount() {
+        this.unsubscribe = todoAppStore.subscribe(() => {
+            this.forceUpdate();
+        });
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    render() {
+        let props = this.props;
+        let state = todoAppStore.getState();
+
+        return (
             <TodoList
-                todos={getVisibleTodos(props.todos, props.visibilityFilter)}
+                todos={getVisibleTodos(state.todos, state.visibilityFilter)}
                 onClickTodo={id => {
                     todoAppStore.dispatch(toggleTodoItem(id)
                 );
             }}/>
+        );
+    }
+}
+
+
+export const TodoApp = (props) => {
+    return(
+        <div>
+            <AddTodo />
+            <VisibleTodoList />
             <Footer />
         </div>
     );

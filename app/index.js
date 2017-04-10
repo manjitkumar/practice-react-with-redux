@@ -10,12 +10,8 @@ import styles from './stylesheets/main.css';
 
 export const todoAppStore = createStore(todoAppReducer);
 
-const render = () => {
-    ReactDom.render(
-        <TodoApp {...todoAppStore.getState()} />,
-        document.getElementById('app')
-    );
-}
 
-todoAppStore.subscribe(render);
-render();
+ReactDom.render(
+    <TodoApp {...todoAppStore.getState()} />,
+    document.getElementById('app')
+);
