@@ -9,23 +9,24 @@ export const VisibilityFiltersList = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
 
-export const addTodoItem = (text) => {
+export const addTodoItem = (id, text) => {
     return {
         type: ADD_TODO_ITEM,
-        text: text
+        id,
+        text
     };
 }
 
-export const toggleTodoItem = (itemId) => {
+export const toggleTodoItem = (id) => {
     return {
         type: TOGGLE_TODO_ITEM,
-        id: itemId
+        id
     };
 }
 
 export const setTodoVisibililtyFilter = (filter) => {
     return {
         type: SET_TODO_VISIBILITY_FILTER,
-        filter: filter
+        filter
     };
 }

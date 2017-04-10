@@ -9,24 +9,41 @@ import {
 import { todoAppStore } from '../../';
 
 
-const Todo = (props) => {
+
+const AddTodo = (props) => {
+    let input;
     return (
         <div>
-            <li onClick={()=>{
-                    todoAppStore.dispatch(toggleTodoItem(props.id))
-                }}
-                style={{
-                    textDecoration: props.completed? 'line-through': 'none'
-                }}>
-            { props.text }
-            </li>
+            <input ref={node => {
+                input = node;
+            }}/>
+            <button
+                onClick={() => { props.onAddClick(input.value);
+                input.value = '';
+            }}>
+            Add Todo
+            </button>
         </div>
     );
 }
 
+const Todo = (props) => {
+    return (
+        <li onClick={props.onClick}
+            style={{
+            textDecoration: props.completed? 'line-through': 'none'
+        }}>
+        { props.text }
+        </li>
+    );
+}
+
 const TodoList = (props) => {
-    const listItems = props.listItems.map((item, idx) => {
-        return <Todo key={idx} id={idx} text={item.text} completed={item.completed} />
+    const listItems = props.todos.map((todo) => {
+        return <Todo
+            key={todo.id}
+            {...todo}
+            onClick={() => props.onClickTodo(todo.id)} />
     });
     return (
         <ul>
@@ -34,7 +51,6 @@ const TodoList = (props) => {
         </ul>
     );
 }
-
 
 const FilterLink = (props) => {
     if (props.filter === props.currentFilter) {
@@ -44,12 +60,32 @@ const FilterLink = (props) => {
     return (
         <a href='#' onClick={(e) => {
             e.preventDefault();
-            todoAppStore.dispatch(setTodoVisibililtyFilter(props.filter))
+            props.onClick(props.filter);
         }}>
         {props.children}
         </a>
     );
 }
+
+const Footer = (props) => {
+    return (
+        <p>
+            {' '}
+            <FilterLink filter={VisibilityFiltersList.SHOW_ALL} onClick={props.onFilterClick} currentFilter={props.visibilityFilter} >
+                All
+            </FilterLink>
+            {' '}
+            <FilterLink filter={VisibilityFiltersList.SHOW_COMPLETED} onClick={props.onFilterClick} currentFilter={props.visibilityFilter}>
+                Completed
+            </FilterLink>
+            {' '}
+            <FilterLink filter={VisibilityFiltersList.SHOW_ACTIVE} onClick={props.onFilterClick} currentFilter={props.visibilityFilter}>
+                Active
+            </FilterLink>
+            </p>
+    );
+}
+
 
 const getVisibleTodos = (todos, filter) => {
     switch(filter) {
@@ -68,47 +104,29 @@ const getVisibleTodos = (todos, filter) => {
     }
 }
 
+let nextTodoId = 0;
 
-export class TodoApp extends React.Component {
-    render() {
-
-        let visibleTodos = getVisibleTodos(
-            this.props.todos,
-            this.props.visibilityFilter
-        );
-
-        return(
-            <div>
-                <div>
-                    <input ref={node => {
-                        this.input = node;
-                    }}/>
-                    <button
-                        onClick={()=>{
-                            if (this.input.value === ''){
-                                return
-                            }
-                            todoAppStore.dispatch(addTodoItem(this.input.value));
-                            this.input.value = '';
-                        }}
-                    > Add Todo </button>
-                </div>
-                <TodoList listItems={visibleTodos} />
-                <p>
-                {' '}
-                <FilterLink filter={VisibilityFiltersList.SHOW_ALL} currentFilter={this.props.visibilityFilter} >
-                    All
-                </FilterLink>
-                {' '}
-                <FilterLink filter={VisibilityFiltersList.SHOW_COMPLETED} currentFilter={this.props.visibilityFilter}>
-                    Completed
-                </FilterLink>
-                {' '}
-                <FilterLink filter={VisibilityFiltersList.SHOW_ACTIVE} currentFilter={this.props.visibilityFilter}>
-                    Active
-                </FilterLink>
-                </p>
-            </div>
-        );
-    }
+export const TodoApp = (props) => {
+    return(
+        <div>
+            <AddTodo
+                onAddClick={(text)=> {
+                    todoAppStore.dispatch(addTodoItem(nextTodoId++, text)
+                    );
+                }}
+            />
+            <TodoList
+                todos={getVisibleTodos(props.todos, props.visibilityFilter)}
+                onClickTodo={id => {
+                    todoAppStore.dispatch(toggleTodoItem(id)
+                );
+            }}/>
+            <Footer
+                visibilityFilter={props.visibilityFilter}
+                onFilterClick={(filter) => {
+                    todoAppStore.dispatch(setTodoVisibililtyFilter(filter)
+                );
+            }}/>
+        </div>
+    );
 }
