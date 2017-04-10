@@ -8,9 +8,6 @@ import {
     VisibilityFiltersList } from '../actions';
 
 
-let nextTodoId = 0;
-
-
 let AddTodo = (props) => {
     let input;
     return (
@@ -20,10 +17,10 @@ let AddTodo = (props) => {
             }}/>
             <button
                 onClick={()=> {
-                    props.dispatch(addTodoItem(nextTodoId++, input.value)
-                );
-                input.value = '';
-            }}>
+                    props.dispatch(addTodoItem(input.value));
+                    input.value = '';
+                }}
+            >
             Add Todo
             </button>
         </div>

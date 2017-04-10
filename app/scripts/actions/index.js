@@ -9,10 +9,12 @@ export const VisibilityFiltersList = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
 
-export const addTodoItem = (id, text) => {
+let nextTodoId = 0;
+
+export const addTodoItem = (text) => {
     return {
         type: ADD_TODO_ITEM,
-        id,
+        id: nextTodoId++,
         text
     };
 }
