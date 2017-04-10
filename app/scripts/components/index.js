@@ -8,9 +8,6 @@ import {
     VisibilityFiltersList } from '../actions';
 
 
-let nextTodoId = 0;
-
-
 let AddTodo = (props) => {
     let input;
     return (
@@ -20,10 +17,10 @@ let AddTodo = (props) => {
             }}/>
             <button
                 onClick={()=> {
-                    props.dispatch(addTodoItem(nextTodoId++, input.value)
-                );
-                input.value = '';
-            }}>
+                    props.dispatch(addTodoItem(input.value));
+                    input.value = '';
+                }}
+            >
             Add Todo
             </button>
         </div>
@@ -46,7 +43,6 @@ const Todo = (props) => {
     );
 }
 
-
 const TodoList = (props) => {
     const listItems = props.todos.map((todo) => {
         return <Todo
@@ -60,7 +56,6 @@ const TodoList = (props) => {
         </ul>
     );
 }
-
 
 const Link = (props) => {
     if (props.active) {
@@ -93,42 +88,6 @@ const FilterLink = connect(
     mapDispatchToLinkProps
 )(Link);
 
-// class FilterLink extends React.Component {
-//     // This is a container component.
-
-//     componentDidMount() {
-//         const { store } = this.context;
-//         this.unsubscribe = store.subscribe(() => {
-//             this.forceUpdate();
-//         });
-//     }
-
-//     componentWillUnmount() {
-//         this.unsubscribe();
-//     }
-
-//     render() {
-//         const { store } = this.context;
-//         const props = this.props;
-//         const state = store.getState();
-
-//         return (
-//             <Link
-//                 active={props.filter === state.visibilityFilter}
-//                 onClick={() => store.dispatch(
-//                     setTodoVisibililtyFilter(props.filter)
-//                 )}>
-//             {props.children}
-//             </Link>
-//         );
-//     }
-// }
-
-// FilterLink.contextTypes = {
-//     store: React.PropTypes.object
-// };
-
-
 const Footer = () => {
     return (
         <p>
@@ -147,7 +106,6 @@ const Footer = () => {
         </p>
     );
 }
-
 
 const getVisibleTodos = (todos, filter) => {
     switch(filter) {
@@ -185,39 +143,6 @@ const VisibleTodoList = connect(
     mapStateToTodoListProps,
     mapDispatchtoTodoListProps
 )(TodoList);
-
-// class VisibleTodoList extends React.Component {
-//     // This is a container component.
-
-//     componentDidMount() {
-//         const { store } = this.context;
-//         this.unsubscribe = store.subscribe(() => {
-//             this.forceUpdate();
-//         });
-//     }
-
-//     componentWillUnmount() {
-//         this.unsubscribe();
-//     }
-
-//     render() {
-//         const { store } = this.context;
-//         let props = this.props;
-//         let state = store.getState();
-
-//         return (
-//             <TodoList
-//                 onClickTodo={id => {
-
-//                 );
-//             }}/>
-//         );
-//     }
-// }
-
-// VisibleTodoList.contextTypes = {
-//     store: React.PropTypes.object
-// };
 
 
 export const TodoApp = (props) => {
