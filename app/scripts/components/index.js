@@ -11,7 +11,7 @@ import {
 let nextTodoId = 0;
 
 
-const AddTodo = (props, { store }) => {
+let AddTodo = (props) => {
     let input;
     return (
         <div>
@@ -20,7 +20,7 @@ const AddTodo = (props, { store }) => {
             }}/>
             <button
                 onClick={()=> {
-                    store.dispatch(addTodoItem(nextTodoId++, input.value)
+                    props.dispatch(addTodoItem(nextTodoId++, input.value)
                 );
                 input.value = '';
             }}>
@@ -30,10 +30,10 @@ const AddTodo = (props, { store }) => {
     );
 }
 
-AddTodo.contextTypes = {
-    store: React.PropTypes.object
-};
-
+// connect takes mapStatetoProps(state) and mapDispatchToProps(dispatch)
+// but if called without any args it doesn't subscribe to store but
+// it passes dispatch as props to given component to callback.
+AddTodo = connect()(AddTodo);
 
 const Todo = (props) => {
     return (
