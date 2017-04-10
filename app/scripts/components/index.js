@@ -52,37 +52,65 @@ const TodoList = (props) => {
     );
 }
 
-const FilterLink = (props) => {
-    if (props.filter === props.currentFilter) {
+const Link = (props) => {
+    if (props.active) {
         return <span>{props.children}</span>
     }
-
     return (
         <a href='#' onClick={(e) => {
             e.preventDefault();
-            props.onClick(props.filter);
+            props.onClick();
         }}>
         {props.children}
         </a>
     );
 }
 
-const Footer = (props) => {
+class FilterLink extends React.Component {
+    // This is a container component.
+
+    componentDidMount() {
+        this.unsubscribe = todoAppStore.subscribe(() => {
+            this.forceUpdate();
+        });
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    render() {
+        const props = this.props;
+        const state = todoAppStore.getState();
+
+        return (
+            <Link
+                active={props.filter === state.visibilityFilter}
+                onClick={() => todoAppStore.dispatch(
+                    setTodoVisibililtyFilter(props.filter)
+                )}>
+            {props.children}
+            </Link>
+        );
+    }
+}
+
+const Footer = () => {
     return (
         <p>
             {' '}
-            <FilterLink filter={VisibilityFiltersList.SHOW_ALL} onClick={props.onFilterClick} currentFilter={props.visibilityFilter} >
+            <FilterLink filter={VisibilityFiltersList.SHOW_ALL}>
                 All
             </FilterLink>
             {' '}
-            <FilterLink filter={VisibilityFiltersList.SHOW_COMPLETED} onClick={props.onFilterClick} currentFilter={props.visibilityFilter}>
+            <FilterLink filter={VisibilityFiltersList.SHOW_COMPLETED}>
                 Completed
             </FilterLink>
             {' '}
-            <FilterLink filter={VisibilityFiltersList.SHOW_ACTIVE} onClick={props.onFilterClick} currentFilter={props.visibilityFilter}>
+            <FilterLink filter={VisibilityFiltersList.SHOW_ACTIVE}>
                 Active
             </FilterLink>
-            </p>
+        </p>
     );
 }
 
@@ -121,12 +149,7 @@ export const TodoApp = (props) => {
                     todoAppStore.dispatch(toggleTodoItem(id)
                 );
             }}/>
-            <Footer
-                visibilityFilter={props.visibilityFilter}
-                onFilterClick={(filter) => {
-                    todoAppStore.dispatch(setTodoVisibililtyFilter(filter)
-                );
-            }}/>
+            <Footer />
         </div>
     );
 }
