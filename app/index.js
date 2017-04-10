@@ -8,10 +8,26 @@ import { TodoApp } from './scripts/components';
 import styles from './stylesheets/main.css';
 
 
-export const todoAppStore = createStore(todoAppReducer);
+class Provider extends React.Component {
+    getChildContext() {
+        return {
+            store: this.props.store
+        };
+    }
+
+    render() {
+        return this.props.children;
+    }
+}
+
+Provider.childContextTypes = {
+    store: React.PropTypes.object
+}
 
 
 ReactDom.render(
-    <TodoApp {...todoAppStore.getState()} />,
+    <Provider store={createStore(todoAppReducer)}>
+        <TodoApp />
+    </Provider>,
     document.getElementById('app')
 );

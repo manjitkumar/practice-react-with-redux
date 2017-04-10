@@ -6,12 +6,11 @@ import {
     setTodoVisibililtyFilter,
     VisibilityFiltersList } from '../actions';
 
-import { todoAppStore } from '../../';
-
 
 let nextTodoId = 0;
 
-const AddTodo = (props) => {
+
+const AddTodo = (props, { store }) => {
     let input;
     return (
         <div>
@@ -20,7 +19,7 @@ const AddTodo = (props) => {
             }}/>
             <button
                 onClick={()=> {
-                    todoAppStore.dispatch(addTodoItem(nextTodoId++, input.value)
+                    store.dispatch(addTodoItem(nextTodoId++, input.value)
                 );
                 input.value = '';
             }}>
@@ -29,6 +28,11 @@ const AddTodo = (props) => {
         </div>
     );
 }
+
+AddTodo.contextTypes = {
+    store: React.PropTypes.object
+};
+
 
 const Todo = (props) => {
     return (
@@ -40,6 +44,7 @@ const Todo = (props) => {
         </li>
     );
 }
+
 
 const TodoList = (props) => {
     const listItems = props.todos.map((todo) => {
@@ -55,6 +60,7 @@ const TodoList = (props) => {
     );
 }
 
+
 const Link = (props) => {
     if (props.active) {
         return <span>{props.children}</span>
@@ -69,11 +75,13 @@ const Link = (props) => {
     );
 }
 
+
 class FilterLink extends React.Component {
     // This is a container component.
 
     componentDidMount() {
-        this.unsubscribe = todoAppStore.subscribe(() => {
+        const { store } = this.context;
+        this.unsubscribe = store.subscribe(() => {
             this.forceUpdate();
         });
     }
@@ -83,13 +91,14 @@ class FilterLink extends React.Component {
     }
 
     render() {
+        const { store } = this.context;
         const props = this.props;
-        const state = todoAppStore.getState();
+        const state = store.getState();
 
         return (
             <Link
                 active={props.filter === state.visibilityFilter}
-                onClick={() => todoAppStore.dispatch(
+                onClick={() => store.dispatch(
                     setTodoVisibililtyFilter(props.filter)
                 )}>
             {props.children}
@@ -97,6 +106,11 @@ class FilterLink extends React.Component {
         );
     }
 }
+
+FilterLink.contextTypes = {
+    store: React.PropTypes.object
+};
+
 
 const Footer = () => {
     return (
@@ -140,7 +154,8 @@ class VisibleTodoList extends React.Component {
     // This is a container component.
 
     componentDidMount() {
-        this.unsubscribe = todoAppStore.subscribe(() => {
+        const { store } = this.context;
+        this.unsubscribe = store.subscribe(() => {
             this.forceUpdate();
         });
     }
@@ -150,19 +165,24 @@ class VisibleTodoList extends React.Component {
     }
 
     render() {
+        const { store } = this.context;
         let props = this.props;
-        let state = todoAppStore.getState();
+        let state = store.getState();
 
         return (
             <TodoList
                 todos={getVisibleTodos(state.todos, state.visibilityFilter)}
                 onClickTodo={id => {
-                    todoAppStore.dispatch(toggleTodoItem(id)
+                    store.dispatch(toggleTodoItem(id)
                 );
             }}/>
         );
     }
 }
+
+VisibleTodoList.contextTypes = {
+    store: React.PropTypes.object
+};
 
 
 export const TodoApp = (props) => {
