@@ -2,6 +2,7 @@ import { VisibilityFiltersList } from '../actions';
 import expect from 'expect';
 import deepFreeze from 'deep-freeze';
 import { combineReducers } from 'redux';
+import { v4 } from 'node-uuid';
 
 
 const initialState = {
@@ -9,13 +10,12 @@ const initialState = {
     todos : []
 }
 
-let todoCounter = 0;
 
 const todo = (state, action) => {
     switch(action.type) {
         case 'ADD_TODO_ITEM':
             return {
-                id: todoCounter++,
+                id: v4(),
                 text: action.text,
                 completed: false
             };
