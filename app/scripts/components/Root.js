@@ -1,7 +1,8 @@
 import React from 'react';
-import { TodoApp } from '.';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
+
+import TodoApp from './TodoApp';
 
 
 const Root = ({store}) => {

@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
+import Root from './scripts/components/Root';
+import configureStore from './scripts/configureStore';
 
 import styles from './stylesheets/main.css';
-import configureStore from './scripts/configureStore';
-import Root from './scripts/components/root';
 
 
 const store = configureStore();
