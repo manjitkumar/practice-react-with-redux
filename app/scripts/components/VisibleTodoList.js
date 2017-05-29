@@ -7,13 +7,13 @@ import { toggleTodoItem } from '../actions';
 
 const getVisibleTodos = (todos, filter) => {
     switch(filter) {
-        case 'SHOW_ALL':
+        case 'all':
             return todos;
-        case 'SHOW_COMPLETED':
+        case 'completed':
             return todos.filter(todo => {
                 return todo.completed
             });
-        case 'SHOW_ACTIVE':
+        case 'active':
             return todos.filter(todo => {
                 return !todo.completed
             });
@@ -22,11 +22,11 @@ const getVisibleTodos = (todos, filter) => {
     };
 };
 
-const mapStateToTodoListProps = (state) => {
+const mapStateToTodoListProps = (state, ownParams) => {
     return {
         todos: getVisibleTodos(
             state.todos,
-            state.visibilityFilter
+            ownParams.filter
         )
     };
 };
