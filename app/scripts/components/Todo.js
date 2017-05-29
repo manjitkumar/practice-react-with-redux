@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { addTodoItem } from '../actions';
 
-let AddTodo = (props) => {
+
+export let AddTodo = (props) => {
     let input;
     return (
         <div>
@@ -11,7 +13,12 @@ let AddTodo = (props) => {
             }}/>
             <button
                 onClick={()=> {
-                    props.dispatch(addTodoItem(input.value));
+                    let todo_text = input.value.trim();
+                    if (todo_text === '') {
+                        alert("Sorry! Can't add empty todo!");
+                        return
+                    }
+                    props.dispatch(addTodoItem(todo_text));
                     input.value = '';
                 }}
             >
@@ -19,7 +26,7 @@ let AddTodo = (props) => {
             </button>
         </div>
     );
-}
+};
 
 // connect takes mapStatetoProps(state) and mapDispatchToProps(dispatch)
 // but if called without any args it doesn't subscribe to store but
@@ -35,6 +42,6 @@ const Todo = (props) => {
         { props.text }
         </li>
     );
-}
+};
 
 export default Todo;

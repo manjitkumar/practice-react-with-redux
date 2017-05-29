@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import TodoList from './TodoList';
+import { toggleTodoItem } from '../actions';
 
 
 const getVisibleTodos = (todos, filter) => {
@@ -18,8 +19,8 @@ const getVisibleTodos = (todos, filter) => {
             });
         default:
             return todos;
-    }
-}
+    };
+};
 
 const mapStateToTodoListProps = (state) => {
     return {
@@ -27,14 +28,14 @@ const mapStateToTodoListProps = (state) => {
             state.todos,
             state.visibilityFilter
         )
-    }
-}
+    };
+};
 
 const mapDispatchtoTodoListProps = (dispatch) => {
     return {
         onClickTodo: (id) => dispatch(toggleTodoItem(id))
-    }
-}
+    };
+};
 
 const VisibleTodoList = connect(
     mapStateToTodoListProps,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AddTodo from './Todo';
+import { AddTodo } from './Todo';
 import Footer from './Footer';
 import VisibleTodoList from './VisibleTodoList';
 
