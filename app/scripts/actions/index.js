@@ -1,3 +1,5 @@
+import { v4 } from 'node-uuid';
+
 export const ADD_TODO_ITEM = 'ADD_TODO_ITEM';
 export const TOGGLE_TODO_ITEM = 'TOGGLE_TODO_ITEM';
 export const SET_TODO_VISIBILITY_FILTER = 'SET_TODO_VISIBILITY_FILTER';
@@ -9,26 +11,24 @@ export const VisibilityFiltersList = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
 
-let nextTodoId = 0;
-
 export const addTodoItem = (text) => {
     return {
         type: ADD_TODO_ITEM,
-        id: nextTodoId++,
-        text
+        id: v4(),
+        text,
     };
-}
+};
 
 export const toggleTodoItem = (id) => {
     return {
         type: TOGGLE_TODO_ITEM,
-        id
+        id,
     };
-}
+};
 
 export const setTodoVisibililtyFilter = (filter) => {
     return {
         type: SET_TODO_VISIBILITY_FILTER,
-        filter
+        filter,
     };
-}
+};
