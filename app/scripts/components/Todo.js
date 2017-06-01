@@ -44,23 +44,4 @@ const Todo = (props) => {
     );
 };
 
-
-export const getVisibleTodos = (todos, filter) => {
-    switch(filter) {
-        case 'all':
-            return todos;
-        case 'completed':
-            return todos.filter(todo => {
-                return todo.completed
-            });
-        case 'active':
-            return todos.filter(todo => {
-                return !todo.completed
-            });
-        default:
-            return todos;
-    };
-};
-
-
 export default Todo;
