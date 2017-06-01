@@ -1,6 +1,6 @@
 import throttle from 'lodash/throttle';
 import { createStore } from 'redux';
-import { todoAppReducer, localState } from './reducers';
+import todoAppReducer from './reducers';
 import { loadState, saveState } from './localStorage';
 
 
