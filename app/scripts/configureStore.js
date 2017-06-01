@@ -4,6 +4,21 @@ import todoAppReducer from './reducers';
 import { loadState, saveState } from './localStorage';
 
 
+const addLoggingToDispatch = (store) => {
+    const rawDispatch = store.dispatch;
+    if (!console.group) {
+        return rawDispatch;
+    }
+    return (action) => {
+        console.group(action.type);
+        console.log('%c prevState', 'color: grey', store.getState());
+        console.log('%c action', 'color: blue', action);
+        const returnValue = rawDispatch(action);
+        console.log('%c nextState', 'color: green', store.getState());
+        console.groupEnd(action.type);
+        return returnValue;
+    };
+};
 
 const configureStore = () => {
     // load persisted state from local storage
@@ -15,6 +30,8 @@ const configureStore = () => {
         todoAppReducer,
         persistedState
     );
+
+    store.dispatch = addLoggingToDispatch(store);
 
     // subscibe to store changes to save updated state
     // in local storage only once a second using throttle
