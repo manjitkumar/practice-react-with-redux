@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import { createStore } from 'redux';
 import todoAppReducer from './reducers';
-import { loadState, saveState } from './localStorage';
+import { fetchTodos } from './apis';
 
 
 const addLoggingToDispatch = (store) => {
@@ -21,24 +21,16 @@ const addLoggingToDispatch = (store) => {
 };
 
 const configureStore = () => {
-    // load persisted state from local storage
-    const persistedState = loadState();
 
     // create store with root reducer and persisted state
     // from local storage
     const store = createStore(
         todoAppReducer,
-        persistedState
     );
 
+    // wrap store.dispatch to log changes on every call
+    // to store's dispatch method.
     store.dispatch = addLoggingToDispatch(store);
-
-    // subscibe to store changes to save updated state
-    // in local storage only once a second using throttle
-    store.subscribe(throttle(() => {
-        saveState(store.getState());
-    }), 1000);
-
     return store;
 }
 
