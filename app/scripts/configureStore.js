@@ -20,6 +20,16 @@ const addLoggingToDispatch = (store) => {
     };
 };
 
+const addPromiseSupportToDispatch = (store) => {
+    const rawDispatch = store.dispatch;
+    return (action) => {
+        if (typeof action.then === 'function') {
+            return action.then(rawDispatch);
+        }
+        return rawDispatch(action);
+    };
+};
+
 const configureStore = () => {
 
     // create store with root reducer and persisted state
@@ -31,6 +41,11 @@ const configureStore = () => {
     // wrap store.dispatch to log changes on every call
     // to store's dispatch method.
     store.dispatch = addLoggingToDispatch(store);
+
+    // wrap store.dispatch to make it aware of promises
+    // returned in action creators and handle promises.
+    store.dispatch = addPromiseSupportToDispatch(store);
+
     return store;
 }
 
