@@ -3,6 +3,7 @@ import { v4 } from 'node-uuid';
 export const ADD_TODO_ITEM = 'ADD_TODO_ITEM';
 export const TOGGLE_TODO_ITEM = 'TOGGLE_TODO_ITEM';
 export const SET_TODO_VISIBILITY_FILTER = 'SET_TODO_VISIBILITY_FILTER';
+export const RECEIVE_TODOS = 'RECEIVE_TODOS';
 
 
 export const VisibilityFiltersList = {
@@ -32,3 +33,11 @@ export const setTodoVisibililtyFilter = (filter) => {
         filter,
     };
 };
+
+export const receiveTodos = (filter, response) => {
+    return {
+        type: RECEIVE_TODOS,
+        filter,
+        response,
+    }
+}
