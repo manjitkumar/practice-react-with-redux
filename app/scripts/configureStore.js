@@ -4,30 +4,35 @@ import todoAppReducer from './reducers';
 import { fetchTodos } from './apis';
 
 
-const addLoggingToDispatch = (store) => {
-    const rawDispatch = store.dispatch;
+const logger = (store) => (next) => {
     if (!console.group) {
-        return rawDispatch;
+        return next;
     }
     return (action) => {
         console.group(action.type);
         console.log('%c prevState', 'color: grey', store.getState());
         console.log('%c action', 'color: blue', action);
-        const returnValue = rawDispatch(action);
+        const returnValue = next(action);
         console.log('%c nextState', 'color: green', store.getState());
         console.groupEnd(action.type);
         return returnValue;
     };
 };
 
-const addPromiseSupportToDispatch = (store) => {
-    const rawDispatch = store.dispatch;
+
+const promise = (store) => (next) => {
     return (action) => {
         if (typeof action.then === 'function') {
-            return action.then(rawDispatch);
+            return action.then(next);
         }
-        return rawDispatch(action);
+        return next(action);
     };
+};
+
+const applyMiddlewaresToStore = (store, middlewares) => {
+    middlewares.slice.reverse().forEach((middleware) =>
+        store.dispatch = middleware(store)(store.dispatch)
+    );
 };
 
 const configureStore = () => {
@@ -38,13 +43,9 @@ const configureStore = () => {
         todoAppReducer,
     );
 
-    // wrap store.dispatch to log changes on every call
-    // to store's dispatch method.
-    store.dispatch = addLoggingToDispatch(store);
-
-    // wrap store.dispatch to make it aware of promises
-    // returned in action creators and handle promises.
-    store.dispatch = addPromiseSupportToDispatch(store);
+    const middlewares = [promise];
+    middlewares.push(logger);
+    store = applyMiddlewaresToStore(store, middlewares);
 
     return store;
 }
