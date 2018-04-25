@@ -1,15 +1,18 @@
 import { v4 } from 'node-uuid';
+import * as apis from '../apis';
+
 
 export const ADD_TODO_ITEM = 'ADD_TODO_ITEM';
 export const TOGGLE_TODO_ITEM = 'TOGGLE_TODO_ITEM';
 export const SET_TODO_VISIBILITY_FILTER = 'SET_TODO_VISIBILITY_FILTER';
-
+export const RECEIVE_TODOS = 'RECEIVE_TODOS';
 
 export const VisibilityFiltersList = {
   SHOW_ALL: 'SHOW_ALL',
   SHOW_COMPLETED: 'SHOW_COMPLETED',
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
+
 
 export const addTodoItem = (text) => {
     return {
@@ -32,3 +35,17 @@ export const setTodoVisibililtyFilter = (filter) => {
         filter,
     };
 };
+
+const receiveTodos = (filter, response) => {
+    return {
+        type: RECEIVE_TODOS,
+        filter,
+        response,
+    }
+}
+
+export const fetchTodos = (filter) =>
+    apis.fetchTodos(filter).then((response) =>
+        receiveTodos(filter, response)
+    );
+

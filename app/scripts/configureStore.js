@@ -1,28 +1,22 @@
 import throttle from 'lodash/throttle';
-import { createStore } from 'redux';
-import todoAppReducer from './reducers';
-import { loadState, saveState } from './localStorage';
+import { createStore, applyMiddleware } from 'redux';
+import promise from 'redux-promise';
+import { createLogger } from 'redux-logger';
 
+import todoAppReducer from './reducers';
+import { fetchTodos } from './apis';
 
 
 const configureStore = () => {
-    // load persisted state from local storage
-    const persistedState = loadState();
 
+    const middlewares = [promise];
+    middlewares.push(createLogger());
     // create store with root reducer and persisted state
     // from local storage
-    const store = createStore(
+    return createStore(
         todoAppReducer,
-        persistedState
+        applyMiddleware(...middlewares)
     );
-
-    // subscibe to store changes to save updated state
-    // in local storage only once a second using throttle
-    store.subscribe(throttle(() => {
-        saveState(store.getState());
-    }), 1000);
-
-    return store;
 }
 
 export default configureStore;
